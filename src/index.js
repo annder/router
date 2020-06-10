@@ -2,17 +2,26 @@
  * @type {Boolean}
  * */
 
-let hasHash = value => {
+let hasHash = (value) => {
   const { hash } = location
   return hash.indexOf(value) > 0
 }
 
 /**
  * @param {String} str
- * @return {null|Array}
+ * @return {String|Array}
  * */
 
-const matchNextContent = str => str.match(/\((.+?)\)/)
+const matchNextContent = (str) => {
+  const contentMatch = str.match(/\((.+?)\)/)
+  let result = ''
+  if (contentMatch.indexOf("'") > 0) {
+    result = JSON.parse(nextContentMatch.replace("'", '"').replace("'", '"'))
+  } else {
+    result = JSON.parse(nextContentMatch)
+  }
+  return result
+}
 
 class HistoryRouter {
   constructor() {
@@ -25,9 +34,9 @@ class HistoryRouter {
 
   get _supportPushState() {
     return (
-      (window &&
+      window &&
       window.history &&
-      typeof window.history.pushState !== 'undefined')
+      typeof window.history.pushState !== 'undefined'
     )
   }
   /**
@@ -83,7 +92,7 @@ class Router extends HistoryRouter {
     const { hash } = location
     this.route = {
       fullPath: hash,
-      path: hash
+      path: hash,
     }
 
     this._cachePath = null
@@ -100,7 +109,7 @@ class Router extends HistoryRouter {
     }
 
     const _beforeEach = this.beforeEach
-    this.beforeEach = next => {
+    this.beforeEach = (next) => {
       const nextContent = matchNextContent(next)
       console.log(nextContent)
       // TODO 提取Next
@@ -209,7 +218,7 @@ const router = new Router()
 router.push('123', {
   beforeEntry(to, from, next) {
     next()
-  }
+  },
 })
 router.push('/1231')
 router.push('/1231324')
