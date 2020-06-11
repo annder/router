@@ -1,3 +1,4 @@
+import { matchNextContent } from './utlis'
 /**
  * @type {Boolean}
  * */
@@ -6,49 +7,25 @@ let hasHash = (value) => {
   const { hash } = location
   return hash.indexOf(value) > 0
 }
-
 /**
- * @param {String} str
- * @return {String|Array}
- * */
+ * @type {Boolean}
+ */
 
-const matchNextContent = (str) => {
-  const contentMatch = str.match(/\((.+?)\)/)
-  let result = ''
-  if (contentMatch.indexOf("'") > 0) {
-    result = JSON.parse(nextContentMatch.replace("'", '"').replace("'", '"'))
-  } else {
-    result = JSON.parse(nextContentMatch)
-  }
-  return result
-}
+const _supportPushState =
+  (window || window.history) && typeof window.history.pushState === 'function'
 
+const _stateKey =
+  window && (window.performance || performance) && performance.now
+    ? window.performance.now().toFixed(3)
+    : Date.now().toFixed(3)
+
+console.log(_stateKey)
 class HistoryRouter {
   constructor() {
-    this.history = window.history
+    this.history = window.history || history
     window.location.href = '#/'
   }
-  /**
-   * @type {Boolean}
-   */
 
-  get _supportPushState() {
-    return (
-      window &&
-      window.history &&
-      typeof window.history.pushState !== 'undefined'
-    )
-  }
-  /**
-   * @type {Boolean}
-   */
-  get _stateKey() {
-    return typeof window !== 'undefined' &&
-      window.performance &&
-      window.performance.now
-      ? window.performance.now().toFixed(3)
-      : Date.now().toFixed(3)
-  }
   /**
    * @param {String} url
    * @return {Boolean}
@@ -71,10 +48,10 @@ class HistoryRouter {
    * */
 
   pushState(url, repalce) {
-    if (this._supportPushState && repalce) {
+    if (repalce) {
       this.history.replaceState({ key: this._stateKey }, null, url)
     } else {
-      this.history.pushState({ key: this._stateKey }, '', url)
+      history.pushState({ key: this._stateKey }, '', url)
     }
   }
   /**
@@ -179,13 +156,13 @@ class Router extends HistoryRouter {
    * @param {Number} n
    */
   go(n) {
-    this.history.go(n)
+    super.history.go(n)
   }
   forward() {
-    this.history.go(1)
+    super.history.go(1)
   }
   back() {
-    this.history.go(-1)
+    super.history.go(-1)
   }
   /**
    * @param {String|Boolean|Object} url
