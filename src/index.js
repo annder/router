@@ -19,7 +19,6 @@ const _stateKey =
     ? window.performance.now().toFixed(3)
     : Date.now().toFixed(3)
 
-console.log(_stateKey)
 class HistoryRouter {
   constructor() {
     this.history = window.history || history
@@ -49,9 +48,9 @@ class HistoryRouter {
 
   pushState(url, repalce) {
     if (repalce) {
-      this.history.replaceState({ key: this._stateKey }, null, url)
+      this.history.replaceState({ key: _stateKey }, null, url)
     } else {
-      history.pushState({ key: this._stateKey }, '', url)
+      history.pushState({ key: _stateKey }, '', url)
     }
   }
   /**
@@ -87,7 +86,8 @@ class Router extends HistoryRouter {
 
     const _beforeEach = this.beforeEach
     this.beforeEach = (next) => {
-      const nextContent = matchNextContent(next)
+      console.log(next.toString())
+      const nextContent = matchNextContent(next.toString())
       console.log(nextContent)
       // TODO 提取Next
     }
@@ -156,13 +156,13 @@ class Router extends HistoryRouter {
    * @param {Number} n
    */
   go(n) {
-    super.history.go(n)
+    history.go(n)
   }
   forward() {
-    super.history.go(1)
+    this.go(1)
   }
   back() {
-    super.history.go(-1)
+    this.go(-1)
   }
   /**
    * @param {String|Boolean|Object} url
