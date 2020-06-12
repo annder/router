@@ -11,10 +11,10 @@ let hasHash = (value) => {
  * @type {Boolean}
  */
 
-const _supportPushState =
+export const _supportPushState =
   (window || window.history) && typeof window.history.pushState === 'function'
 
-const _stateKey =
+export const _stateKey =
   window && (window.performance || performance) && performance.now
     ? window.performance.now().toFixed(3)
     : Date.now().toFixed(3)

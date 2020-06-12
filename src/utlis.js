@@ -3,7 +3,8 @@
  * @param {String} str
  */
 export const matchNextContent = (str) => {
-  const contentMatch = str.match(/\((.+?)\);|:/)
+  const contentMatch = str.match(/\((.+?)\):|;/)
+
   let result = null
   if (contentMatch == null) {
     return result
