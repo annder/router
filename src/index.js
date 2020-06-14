@@ -73,32 +73,33 @@ class Router extends HistoryRouter {
 
     this._cachePath = null
     this._hash = window.location.hash || location.hash
-    
+    this.fn = ''
+    const _beforeEach = this.beforeEach
     this.beforeEach = (next) => {
       /**
        * @type {String}
        * */
       const fnString = next.toString()
+      this.fn = next
       const fnNext = fnString.slice(fnString.indexOf('{') + 1)
       const nextContent = matchNextContent(fnNext)
-      console.log(this.fn)
       if (nextContent !== '') {
         this.push('/' + nextContent)
       }
+      _beforeEach(next)
     }
 
     const interceptorFns = ['go', 'forward', 'back']
     for (let index = 0; index < interceptorFns.length; index++) {
       const element = interceptorFns[index]
       const _element = this[element]
-      console.log(this.beforeEach.toString())
       this[element] = (...arg) => {
         // 这里有问题
+        this.fnString()
         _element(...arg)
       }
     }
 
-    const _beforeEach = this.beforeEach
     const _push = this.push
 
     /**
@@ -201,6 +202,10 @@ class Router extends HistoryRouter {
 }
 
 const router = new Router()
+router.beforeEach((to, from, next) => {
+  next('/1')
+})
+
 router.push('123', {
   beforeEntry(to, from, next) {
     next()
@@ -209,6 +214,3 @@ router.push('123', {
 router.push('/1231')
 router.push('/1231324')
 router.go(1)
-router.beforeEach((to, from, next) => {
-  next('/1')
-})
