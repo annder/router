@@ -1,5 +1,4 @@
 import { matchNextContent } from './../src/utlis'
-import { _supportPushState, _stateKey } from './../src/index'
 
 test('Not semi next contents', () => {
   //  测试用例
@@ -8,6 +7,12 @@ test('Not semi next contents', () => {
   const notSemiValueDoubleNext = matchNextContent(`next("1")`)
   const notSemiValueDoublePathNext = matchNextContent(`next({path:"1"})`)
   const notSemiValueSinglePathNext = matchNextContent(`next({path:'1'})`)
+
+  expect(notSemiEmptyNext).toBe('')
+  expect(notSemiValueSingleNext).toBe('1')
+  expect(notSemiValueDoubleNext).toBe('1')
+  expect(notSemiValueDoublePathNext).toBe('1')
+  expect(notSemiValueSinglePathNext).toBe('1')
 })
 
 test('Semi next Content', () => {
@@ -16,6 +21,12 @@ test('Semi next Content', () => {
   const SemiDoubleNext = matchNextContent(`next("1");`)
   const SemiDoubleDoubleNext = matchNextContent(`next({path:"1"});`)
   const SemiSingPathleNext = matchNextContent(`next({path:'1'});`)
+
+  expect(SemiNext).toBe('')
+  expect(SemiSingleNext).toBe('1')
+  expect(SemiDoubleDoubleNext).toBe('1')
+  expect(SemiDoubleNext).toBe('1')
+  expect(SemiSingPathleNext).toBe('1')
 })
 
 test('Has slash contents', () => {
@@ -23,6 +34,11 @@ test('Has slash contents', () => {
   const NotSemiDouble = matchNextContent(`next("/1")`)
   const NotSemiSinglePath = matchNextContent(`next({path:'/1'})`)
   const NotSemiDoublePath = matchNextContent(`next({path:"/1"})`)
+
+  expect(NotSemiSingle).toBe('1')
+  expect(NotSemiDouble).toBe('1')
+  expect(NotSemiSinglePath).toBe('1')
+  expect(NotSemiDoublePath).toBe('1')
 })
 
 test('Has slash and Semi', () => {
@@ -30,17 +46,9 @@ test('Has slash and Semi', () => {
   const SemiDoubleSlash = matchNextContent(`next("/1");`)
   const SemiDoublePathSlash = matchNextContent(`next({path:"/1"});`)
   const SemiSinglePathSlash = matchNextContent(`next({path:'/1'});`)
-})
 
-test('Is support history', () => {
-  const isSupport = _supportPushState()
-  expect(isSupport).toBe(true)
+  expect(SemiDoublePathSlash).toBe('1')
+  expect(SemiSinglePathSlash).toBe('1')
+  expect(SemiDoubleSlash).toBe('1')
+  expect(SemiSingleSlash).toBe('1')
 })
-
-// 是否为最新
-test('has performace time', () => {
-  const performaceKey = _stateKey()
-  expect(performaceKey).toBeString()
-  expect(+performaceKey).toBeNumber()
-})
-

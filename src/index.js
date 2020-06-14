@@ -73,24 +73,32 @@ class Router extends HistoryRouter {
 
     this._cachePath = null
     this._hash = window.location.hash || location.hash
-    this.beforeHooks = []
-    this.afterHooks = []
+    
+    this.beforeEach = (next) => {
+      /**
+       * @type {String}
+       * */
+      const fnString = next.toString()
+      const fnNext = fnString.slice(fnString.indexOf('{') + 1)
+      const nextContent = matchNextContent(fnNext)
+      console.log(this.fn)
+      if (nextContent !== '') {
+        this.push('/' + nextContent)
+      }
+    }
+
     const interceptorFns = ['go', 'forward', 'back']
     for (let index = 0; index < interceptorFns.length; index++) {
       const element = interceptorFns[index]
       const _element = this[element]
+      console.log(this.beforeEach.toString())
       this[element] = (...arg) => {
+        // 这里有问题
         _element(...arg)
       }
     }
 
     const _beforeEach = this.beforeEach
-    this.beforeEach = (next) => {
-      console.log(next.toString())
-      const nextContent = matchNextContent(next.toString())
-      console.log(nextContent)
-      // TODO 提取Next
-    }
     const _push = this.push
 
     /**
@@ -175,6 +183,7 @@ class Router extends HistoryRouter {
   push(url, event) {
     const { hash } = location
     const _url = super._resolvePath(url)
+    console.log('push!', _url)
     super.pushState(hash + _url)
   }
   /**
